@@ -647,6 +647,10 @@ aside img {
   margin-left: 0;
 }
 
+.footer-sign-up-newsletter .form-message {
+  margin-bottom: 12px;
+}
+
 .footer-nav-style nav li {
   margin-bottom: 15px;
 }
