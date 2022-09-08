@@ -1,3 +1,13 @@
+@keyframes spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
 /* /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -378,7 +388,6 @@ a {
   background-size: cover;
   max-height: 500px;
   min-height: 350px;
-  margin-top: 10px;
 }
 
 .header-social-and-contact {
@@ -404,14 +413,19 @@ a {
 
 .header-social-and-contact .icon {
   color: white;
+  font-size: 14px;
 }
 
 .header-search {
   margin-top: 10px;
 }
 .header-controls-and-search {
-  margin-right: 15%;
   float: right;
+  margin-right: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: 15px;
 }
 .header-controls-and-search section {
@@ -443,6 +457,13 @@ a {
   color: #2b2b2b;
   bottom: 3px;
   right: 155px;
+}
+
+.header-counters {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 16px;
 }
 
 /* Simt ca am gresit aici ^ ar fi trebuit
@@ -543,6 +564,20 @@ imaginea. Imi strica alinierea si nu am reusit sa o remediez, asa ca am apelat
 
 .product-tile-controls a i:hover {
   color: #740878;
+}
+
+.product-tile-controls i {
+  font-size: 25px;
+}
+
+.product-tile-controls button {
+  background-color: transparent;
+  border: 0ch;
+  cursor: pointer;
+}
+
+.product-control .spinner-icon {
+  animation: spinner-animation 2s infinite ease-in-out;
 }
 
 /* nu am vazut deloc hover in design. sterg daca nu e in regula :D

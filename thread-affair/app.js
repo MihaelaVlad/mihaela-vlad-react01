@@ -86,7 +86,9 @@ class NewsletterForm extends React.Component {
 
 const newsletterContainer = document.querySelector('.home-newsletter');
 // React recipe?
-ReactDOM.render(<NewsletterForm></NewsletterForm>, newsletterContainer);
+ReactDOM.createRoot(newsletterContainer).render(
+  <NewsletterForm></NewsletterForm>,
+);
 
 class AddToCartButton extends React.Component {
   state = {
@@ -136,7 +138,7 @@ class AddToCartButton extends React.Component {
         {this.state.added === true
           ? `PID: ${this.props.productId} in cart`
           : 'Add to Cart'}
-        {this.state.busy ? <i className="fas fa-spinner"></i> : ''}
+        {this.state.busy ? <i className="fas fa-spinner spinner"></i> : ''}
       </button>
     );
   }
@@ -177,7 +179,7 @@ const AddToWishlistButton = ({ productId }) => {
       {actualState.added === true
         ? `PID: ${productId} in wishlist`
         : 'Add to Wishlist'}
-      {actualState.busy ? <i className="fas fa-spinner"></i> : ''}
+      {actualState.busy ? <i className="fas fa-spinner spinner"></i> : ''}
     </button>
   );
 };
@@ -199,9 +201,8 @@ class ProductControls extends React.Component {
 
 const productTileControls = document.querySelectorAll('.product-tile-controls');
 productTileControls.forEach((productTileControl, index) => {
-  ReactDOM.render(
+  ReactDOM.createRoot(productTileControl).render(
     <ProductControls productId={index}></ProductControls>,
-    productTileControl,
   );
 });
 
@@ -267,5 +268,5 @@ class HeaderCounters extends React.Component {
 }
 
 const headerCounters = document.querySelector('.header-counters');
-// mount react the good way
+// // mount react the good way
 ReactDOM.createRoot(headerCounters).render(<HeaderCounters></HeaderCounters>);

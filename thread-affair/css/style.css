@@ -1,3 +1,13 @@
+@keyframes spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -551,6 +561,10 @@ a {
 .product-tile .product-control.active {
   color: #fff;
   background-color: #ff6b6b;
+}
+
+.product-tile .spinner {
+  animation: spinner-animation 3s infinite ease-in-out;
 }
 
 .home-catalog-preview footer {
