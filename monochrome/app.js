@@ -1,5 +1,7 @@
 const ADD_TO_CART_EVENT = 'cart/productAdded';
 const REMOVE_FROM_CART_EVENT = 'cart/productRemoved';
+const ADD_TO_WISHLIST_EVENT = 'wl/productAdded';
+const REMOVE_FROM_WISHLIST_EVENT = 'wl/productRemoved';
 
 class NewsletterForm extends React.Component {
   state = {
@@ -97,12 +99,12 @@ class AddToCartButton extends React.Component {
     });
 
     setTimeout(() => {
-      const eventName = this.state.added
+      const cartEvent = this.state.added
         ? REMOVE_FROM_CART_EVENT
         : ADD_TO_CART_EVENT;
 
       dispatchEvent(
-        new CustomEvent(eventName, {
+        new CustomEvent(cartEvent, {
           detail: {
             productId: this.props.productId,
           },
@@ -151,7 +153,16 @@ const AddToWishlistButton = ({ productId }) => {
     });
 
     setTimeout(() => {
-      // dispatch event
+      const wishilistEvent = new CustomEvent(
+        actualState.added ? REMOVE_FROM_WISHLIST_EVENT : ADD_TO_WISHLIST_EVENT,
+        {
+          detail: {
+            productId,
+          },
+        },
+      );
+
+      dispatchEvent(wishilistEvent);
 
       setState({
         added: !actualState.added,
@@ -179,16 +190,19 @@ const AddToWishlistButton = ({ productId }) => {
 
 class ProductControls extends React.Component {
   render() {
-    return [
-      <AddToCartButton
-        key="cart"
-        productId={this.props.productId}
-      ></AddToCartButton>,
+    const productId = this.props.productId;
 
-      <AddToWishlistButton
-        key="whislist"
-        productId={this.props.productId}
-      ></AddToWishlistButton>,
+    const WrappedButtonCart = ({ productId }) => {
+      return <AddToCartButton productId={productId}></AddToCartButton>;
+    };
+
+    const WrappedButtonWish = ({ productId }) => {
+      return <AddToWishlistButton productId={productId}></AddToWishlistButton>;
+    };
+
+    return [
+      <WrappedButtonCart productId={productId} key="cart"></WrappedButtonCart>,
+      <WrappedButtonWish productId={productId} key="wish"></WrappedButtonWish>,
     ];
   }
 }
@@ -204,40 +218,76 @@ class HeaderCounters extends React.Component {
   state = {
     cartItemsCount: 0,
     cartItems: [],
+    wishlistItemsCount: 0,
+    wishlistItems: [],
+  };
+
+  productCartAction = (event) => {
+    const { productId } = event.detail;
+    alert(productId);
+    const cartItems = this.state.cartItems.slice();
+    const { type: eventType } = event;
+
+    switch (eventType) {
+      case ADD_TO_CART_EVENT:
+        cartItems.push(productId);
+        this.setState({
+          cartItems,
+          cartItemsCount: this.state.cartItemsCount + 1,
+        });
+        break;
+
+      case REMOVE_FROM_CART_EVENT:
+        this.setState({
+          cartItems: cartItems.filter((item) => {
+            return item !== productId;
+          }),
+          cartItemsCount: this.state.cartItemsCount - 1,
+        });
+    }
+  };
+
+  productWishlistAction = (event) => {
+    const productId = event.detail.productId;
+
+    switch (event.type) {
+      case ADD_TO_WISHLIST_EVENT:
+        const newProductIds =
+          this.state.wishlistItems.length === 0
+            ? [productId]
+            : [...this.state.wishlistItems, productId];
+
+        this.setState({
+          wishlistItems: newProductIds,
+          wishlistItemsCount: this.state.wishlistItemsCount + 1,
+        });
+        break;
+    }
   };
 
   componentDidMount() {
-    addEventListener(ADD_TO_CART_EVENT, (event) => {
-      const productId = event.detail.productId;
-      const cartItems = this.state.cartItems.slice();
-      cartItems.push(productId);
+    addEventListener(ADD_TO_CART_EVENT, this.productCartAction);
+    addEventListener(REMOVE_FROM_CART_EVENT, this.productCartAction);
 
-      this.setState({
-        cartItemsCount: cartItems.length,
-        cartItems,
-      });
-    });
-
-    addEventListener(REMOVE_FROM_CART_EVENT, (event) => {
-      const productId = event.detail.productId;
-      const cartItems = this.state.cartItems.filter((cartItem) => {
-        return productId !== cartItem;
-      });
-
-      this.setState({
-        cartItemsCount: cartItems.length,
-        cartItems,
-      });
-    });
+    addEventListener(ADD_TO_WISHLIST_EVENT, this.productWishlistAction);
+    addEventListener(REMOVE_FROM_WISHLIST_EVENT, this.productWishlistAction);
   }
 
-  showProducts = () => {
+  componentWillUnmount() {
+    removeEventListener(ADD_TO_CART_EVENT, this.productCartAction);
+    removeEventListener(REMOVE_FROM_CART_EVENT, this.productCartAction);
+
+    removeEventListener(ADD_TO_WISHLIST_EVENT, this.productWishlistAction);
+    removeEventListener(REMOVE_FROM_WISHLIST_EVENT, this.productWishlistAction);
+  }
+
+  showProducts = (collection, displayName) => {
     let message = '';
 
-    if (this.state.cartItems.length <= 0) {
-      message = 'There are no products in your cart';
+    if (this.state[collection].length <= 0) {
+      message = `There are no products in your ${displayName}`;
     } else {
-      message = `These are the pids in your cart: ${this.state.cartItems}`;
+      message = `These are the pids in your ${displayName}: ${this.state[collection]}`;
     }
 
     alert(message);
@@ -246,12 +296,22 @@ class HeaderCounters extends React.Component {
   render() {
     return (
       <>
-        <div className="header-counter" onClick={this.showProducts}>
-          <span className="qty">{this.state.cartItemsCount}</span>
+        <div
+          className="header-counter"
+          onClick={() => {
+            this.showProducts('wishlistItems', 'wishlist');
+          }}
+        >
+          <span className="qty">{this.state.wishlistItemsCount}</span>
           <i className="fas fa-heart icon"></i>
         </div>
 
-        <div className="header-counter" onClick={this.showProducts}>
+        <div
+          className="header-counter"
+          onClick={() => {
+            this.showProducts('cartItems', 'cart');
+          }}
+        >
           <span className="qty">{this.state.cartItemsCount}</span>
           <i className="fas fa-shopping-bag icon"></i>
         </div>
