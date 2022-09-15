@@ -567,6 +567,13 @@ a {
   animation: spinner-animation 3s infinite ease-in-out;
 }
 
+.product-tile .product-tile-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .home-catalog-preview footer {
   margin: 40px 0;
   text-align: center;
