@@ -1,4 +1,4 @@
-export default (message = '', type = 'default', elementType = '') => {
+export default (message = '', type = 'default', elementType = 'div') => {
   const messageContainer = document.createElement(elementType);
   messageContainer.classList.add(
     'alert',
