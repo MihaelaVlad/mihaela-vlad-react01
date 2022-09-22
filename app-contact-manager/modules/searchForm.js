@@ -1,29 +1,34 @@
 import { addMessage, clearMessages } from './notificationBar.js';
 import { findContact } from './query.js';
+// ommit {} for default exports
 import render from './message.js';
 import { pluralize } from './utils.js';
 import stage from './stage.js';
+// do not ommit {} for named exports
 import { render as renderContact } from './contact.js';
 
 const searchForm = document.querySelector('.search-form');
+//  search-form input[name="q"]
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  // currentTarget este elementul pe care am rulat
+  // addEventListener
   const form = event.currentTarget;
   const queryInput = form.q;
 
   clearMessages();
 
   const contacts = findContact(queryInput.value.toLowerCase());
-  const contactCount = contacts.length;
+  const contactsCount = contacts.length;
   const fragment = new DocumentFragment();
 
   contacts.forEach((contact) => {
     fragment.append(renderContact(contact));
   });
 
-  if (contacts.length <= 0) {
-    addMessage(render('No contacts found', 'warning'));
+  if (contactsCount <= 0) {
+    addMessage(render('No contacts found.', 'warning'));
   } else {
     const petsCount = contacts.reduce((petsCount, contact) => {
       const { pets = [] } = contact;
@@ -34,7 +39,7 @@ searchForm.addEventListener('submit', (event) => {
 
     addMessage(
       render(
-        `Found ${pluralize(contactCount, {
+        `Found ${pluralize(contactsCount, {
           one: 'contact',
           many: 'contacts',
         })} with ${
