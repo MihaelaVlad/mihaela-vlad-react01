@@ -88,3 +88,81 @@ const arr4 = person.skills.map((skill) => {
   return Math.abs(person.age - skillLength);
 });
 console.log(arr4);
+
+console.warn(
+  `
+  Folosind metoda map pe arrayul skills, returneaza un array care contine cuvintele cu prima si ultima litera mari.
+  `,
+);
+const arr5 = person.skills.map((skill) => {
+  const skillUpperCase =
+    skill.charAt(0).toUpperCase() +
+    skill.slice(1, -1) +
+    skill.charAt(skill.length - 1).toUpperCase();
+
+  return skillUpperCase;
+});
+console.log(arr5);
+
+console.warn(
+  `
+  Folosind metoda map pe arrayul skills, returneaza un array care contine cuvintele inversate (exemplu: lmth)
+  `,
+);
+const arr6 = person.skills.map((skill) => {
+  const skillReversed = skill.split('').reverse().join('');
+
+  return skillReversed;
+});
+console.log(arr6);
+
+console.warn(
+  `
+  Folosind metoda map pe arrayul friends, returneaza un array care sa contina propozitiile
+  “{friendName} are {age} ani.”
+  `,
+);
+const arr7 = person.friends.map(({ name, age }) => {
+  return `${name} are ${age} ani.`;
+});
+console.log(arr7);
+
+console.warn(`
+  Folosind metoda map pe arrayul friends, returneaza un array care contine numele inversat
+  al prietenilor pe fiecare pozitie (exemplu: Stevenson Steven)
+`);
+const arr8 = person.friends.map(({ name, surname }) => {
+  return `${surname} ${name}`;
+});
+console.log(arr8);
+
+console.warn(
+  `
+  Folosind metoda map pe arrayul friends, returneaza un array care contine pe fiecare
+  pozitie diferenta dintre lungimea totala al numelui complet (fara spatii) si varsta prietenului de pe iteratie
+  `,
+);
+const arr9 = person.friends.map(({ name, surname, age }) => {
+  const fullNameLength = name.length + surname.length;
+  const lengthDiff = Math.abs(fullNameLength - age);
+
+  return lengthDiff;
+});
+console.log(arr9);
+
+console.warn(
+  `
+  Folosind metoda map pe arrayul skills returneaza un array care contine diferenta
+  dintre lungimea fiecarui skill si varsta prietenului
+  `,
+);
+const arr10 = person.skills.map((skill) => {
+  const skillLength = skill.length;
+
+  return person.friends.map((friend) => {
+    const diff = skillLength - friend.age;
+
+    return diff;
+  });
+});
+console.log(arr10);
