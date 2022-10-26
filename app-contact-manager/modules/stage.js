@@ -6,12 +6,16 @@ import {
   deletePet,
   editContact,
   getContact,
+  getPet,
 } from './query.js';
 import renderMessage from './message.js';
 import { render as renderEditContact } from './editContact.js';
 import { render as renderAddPet } from './addPet.js';
 
 const stage = document.querySelector('.stage');
+const clearStage = (element) => {
+  element.innerHTML = '';
+};
 
 // delete contact
 stage.addEventListener('click', (event) => {
@@ -28,10 +32,15 @@ stage.addEventListener('click', (event) => {
   const button = target;
   const parent = button.parentElement;
   const contactId = parent.dataset.contactId;
+  const confirmDelete = confirm(
+    `${contactId} will be deleted from your contact list. Are you sure?`,
+  );
 
-  deleteContact(contactId);
+  if (confirmDelete) {
+    deleteContact(contactId);
+    parent.remove();
+  }
 
-  parent.remove();
   addMessage(renderMessage('Contact removed', 'success'));
 });
 
@@ -56,7 +65,7 @@ stage.addEventListener('click', (event) => {
   }
 
   clearMessages();
-  stage.innerHTML = '';
+  clearStage(stage);
   stage.append(renderEditContact(contact));
 });
 
@@ -71,7 +80,7 @@ stage.addEventListener('click', (event) => {
     return;
   }
 
-  stage.innerHTML = '';
+  clearStage(stage);
 });
 
 // add contact button
@@ -99,7 +108,7 @@ stage.addEventListener('submit', (event) => {
   addMessage(
     renderMessage(`Contact ${name.value} ${surname.value} created.`, 'success'),
   );
-  stage.innerHTML = '';
+  clearStage(stage);
 });
 
 // save edit contact
@@ -143,7 +152,7 @@ stage.addEventListener('click', (event) => {
   const contactId = contactContainer.dataset.contactId;
 
   clearMessages();
-  stage.innerHTML = '';
+  clearStage(stage);
 
   stage.append(renderAddPet(contactId));
 });
@@ -172,7 +181,7 @@ stage.addEventListener('submit', (event) => {
 
   addPet(contactId.value, pet);
 
-  stage.innerHTML = '';
+  clearStage(stage);
   addMessage(
     renderMessage(
       `Pet ${name.value} added to contact ${contactName} ${contactSurname}.`,
@@ -199,8 +208,34 @@ stage.addEventListener('click', (event) => {
   const contactId = contactContainer.dataset.contactId;
 
   deletePet(contactId, petId);
+  addMessage(renderMessage(`Pet was removed from list.`, 'danger'));
 
   container.remove();
+});
+
+// edit  pet
+stage.addEventListener('click', (event) => {
+  const { target } = event;
+
+  if (
+    target.nodeName !== 'BUTTON' ||
+    !target.classList.contains('edit-pet-button')
+  ) {
+    return;
+  }
+
+  const button = target;
+  const parent = button.parentElement;
+  const petId = parent.dataset.petId;
+  const pet = getPet(petId);
+
+  if (!pet) {
+    return;
+  }
+
+  clearMessages();
+  clearStage(stage);
+  stage.append(renderEditContact(pet));
 });
 
 export default stage;

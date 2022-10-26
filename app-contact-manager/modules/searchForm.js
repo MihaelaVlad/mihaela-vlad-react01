@@ -19,7 +19,7 @@ searchForm.addEventListener('submit', (event) => {
 
   clearMessages();
 
-  const contacts = findContact(queryInput.value.toLowerCase());
+  const contacts = findContact(queryInput.value.trim().toLowerCase());
   const contactsCount = contacts.length;
   const fragment = new DocumentFragment();
 
@@ -28,7 +28,12 @@ searchForm.addEventListener('submit', (event) => {
   });
 
   if (contactsCount <= 0) {
-    addMessage(render('No contacts found.', 'warning'));
+    addMessage(
+      render(
+        `No contacts found.  Search term: ${queryInput.value}.`,
+        'warning',
+      ),
+    );
   } else {
     const petsCount = contacts.reduce((petsCount, contact) => {
       const { pets = [] } = contact;
@@ -49,10 +54,20 @@ searchForm.addEventListener('submit', (event) => {
                 one: 'pet',
                 many: 'pets',
               })
-        }.`,
+        }. Search term: ${queryInput.value}.`,
         'success',
       ),
     );
+  }
+
+  if (queryInput.value.length <= 3) {
+    addMessage(
+      render(
+        `You should have more than 3 characters in your search. Search term: ${queryInput.value}.`,
+        'warning',
+      ),
+    );
+    return;
   }
 
   queryInput.value = '';

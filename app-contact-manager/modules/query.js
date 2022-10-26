@@ -99,3 +99,26 @@ export const deletePet = (contactId, petId) => {
     contact.pets.splice(petIndex, 1);
   }
 };
+
+// get pet
+export const getPet = (contactId, petId) => {
+  contactId = Number(contactId);
+  petId = Number(petId);
+
+  return contacts.pets.find(({ id }) => {
+    return id === petId;
+  });
+};
+
+// edit pet
+export const editPet = (pet) => {
+  const existingPet = getPet(pet.id);
+
+  const petProperties = Object.keys(existingPet);
+
+  for (let i = 0; i < petProperties.length; i++) {
+    const propertyNamePet = petProperties[i];
+
+    existingPet[propertyNamePet] = pet[propertyNamePet];
+  }
+};

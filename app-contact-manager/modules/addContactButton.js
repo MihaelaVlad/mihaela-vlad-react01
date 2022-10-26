@@ -4,10 +4,13 @@ import { clearMessages } from './notificationBar.js';
 import tazz from './stage.js';
 
 const addContactButton = document.querySelector('.add-contact-button');
+const clearStage = (element) => {
+  element.innerHTML = '';
+};
 
 addContactButton.addEventListener('click', (event) => {
   clearMessages();
-  tazz.innerHTML = '';
+  clearStage(tazz);
 
   tazz.append(render());
 });
